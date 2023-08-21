@@ -4,7 +4,6 @@ import vi from '../languages/vi';
 
 const i18n = createI18n({
   locale: 'vi',
-  allowComposition: true, // you need to specify that!
   messages: {
     en,
     vi

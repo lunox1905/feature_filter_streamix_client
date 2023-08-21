@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { inject, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useToast } from "primevue/usetoast";
@@ -20,7 +20,7 @@ const link = ref([
   
 ]);
 const selectedUrl = ref(link.value[0]);
-const comments = ref([]);
+const comments = ref([] as any []);
 const filterByTimeToggle = ref(false);
 const rows = ref(10);
 const page = ref(1);
@@ -59,7 +59,7 @@ const defaultFilter = ref({
   keyword: inputFilter.value,
   perfectMatch: false,
   caseSensitive: false,
-  filterLatestComment: [],
+  filterLatestComment: [] as any [],
   reacted: false,
   shared: false,
   removeDuplicateComment: false,
@@ -67,8 +67,6 @@ const defaultFilter = ref({
 });
 
 const handleFilter = () => {
-  console.log(page.value)
-  console.log(oldFilter.value)
   isLoading.value = true;
   defaultFilter.value.keyword = inputFilter.value = inputFilter.value.trim();
   defaultFilter.value.filterLatestComment = defaultFilter.value.filterLatestComment.map((item) => item.trim());
@@ -129,23 +127,8 @@ const handleFilter = () => {
 
 };
 
-const updateListFilter = () => {
-  commentCurrent.value = comments.value.slice(page.value * rows.value - rows.value, page.value * rows.value)
-  isLoading.value = true;
-  window.$api
-    .call("load-comment/sendFilter", {
-      id: route.query.room,
-      page: page.value,
-      rows: rows.value,
-      total: totalComment.value,
-      comments: commentCurrent.value
-    })
-    .then((res) => {
-      isLoading.value = false;
-    });
-};
 
-const updateTime = (index, e) => {
+const updateTime = (index : any, e : any) => {
   const [hours, minutes] = e.target.value.split(":");
   const now = new Date();
   now.setHours(hours);
@@ -158,14 +141,14 @@ const updateTime = (index, e) => {
   defaultFilter.value.filterByTime[index] = now.getTime();
 };
 
-const showError = (details) => {
+const showError = (details: any) => {
   toast.add({ severity: "error", summary: "Error Message", detail: details, life: 3000 });
 };
 const showSuccess = () => {
   toast.add({ severity: "success", summary: "Success Message", detail: "Change password successfully", life: 10000 });
 };
 
-const nextPage = (params) => {
+const nextPage = (params : any) => {
   oldFilter.value = true
   if (params) {
     if ((!!(totalComment.value % rows.value) && page.value === Math.floor(totalComment.value / rows.value) + 1) || (!(totalComment.value % rows.value) && page.value === Math.floor(totalComment.value / rows.value))) {
@@ -192,19 +175,6 @@ watch(filterByTimeToggle, () => {
   }
 });
 
-watch(commentLucky, () => {
-  if(pageLucky.value){
-    page.value = pageLucky.value
-    if(commentsLucky.value){
-      comments.value = commentsLucky.value
-    }
-  } else {
-    removeCommentLucky()
-  }
-  if(!commentLucky.value){
-    removeCommentLucky()
-  }
-})
 
 function removeCommentLucky(){
   for(let i = 0; i < comments.value.length; i++){
@@ -215,18 +185,6 @@ function removeCommentLucky(){
     }
 }
 
-const pushResult = () => {
-  window.$api.call("load-comment/filterUser", { roomId: route.query.room }).then(res => {
-    console.log(res, "res")
-    if(res && res.status){
-      pushResultUser.value = true
-    } else {
-      showError("error")
-    }
-  }).catch(e => {
-    showError(JSON.stringify(e))
-  })
-}
 </script>
 <template>
 
@@ -480,9 +438,7 @@ const pushResult = () => {
       </div>
     </div>
     <div class="">
-      <div class="text-xl font-semibold mt-5 mb-2 gap-4 flex align-items-center">{{ t("filter.titleResult") }} 
-        <Button v-if="!pushResultUser && totalComment" @click="pushResult" size="small" :label="t('filterUser.push')" />
-      </div>
+      
     </div>
     <div class="container-table">
       <div class="flex header-filter">
