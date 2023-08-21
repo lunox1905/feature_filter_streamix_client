@@ -84,7 +84,7 @@ const handleFilter = () => {
     return;
   }
   const searchQuery = (defaultFilter.value.keyword ? `?search=${defaultFilter.value.keyword}` : '')
-    fetch("http://localhost:3000/meiliSearchFilter/12345" + searchQuery, {
+    fetch("http://localhost:3000/meiliSearchFilter/64ddc7a085d30646fcfa21ed-live_1" + searchQuery, {
       method: "POST", 
       headers: {
         "Content-Type": "application/json",
