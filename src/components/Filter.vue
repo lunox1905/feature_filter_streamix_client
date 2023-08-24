@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { inject, ref, watch } from "vue";
-import { useRoute } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { useClipboard } from "@vueuse/core";
 import { useI18n } from "vue-i18n-lite";
 import InputSwitch from 'primevue/inputswitch';
 import Dropdown from 'primevue/dropdown';
 import Button from 'primevue/button';
-import InputText from 'primevue/InputText'
+import InputText from 'primevue/InputText';
 import Chips from 'primevue/chips';
+import { useRoute } from 'vue-router';
+
 const { t } = useI18n();
 const { copy } = useClipboard({ legacy: true });
 const toast = useToast();
@@ -19,6 +20,7 @@ const link = ref([
   { name: t("filter.web"), code: "web-filter", url: `${currentDomain}/comment-filter/${route.params.id}?room=${route.query.room}` },
   
 ]);
+const idChanel = ref(route.params.id)
 const selectedUrl = ref(link.value[0]);
 const comments = ref([] as any []);
 const filterByTimeToggle = ref(false);
@@ -29,8 +31,6 @@ const isLoading = ref(false);
 const filterLastCommentToggle = ref(false);
 const timeFirst = ref();
 const timeSecond = ref();
-const commentLucky = inject("commentLucky")
-const commentCurrent = ref([])
 const oldFilter = ref(false)
 const pageLucky = inject("pageLucky")
 const commentsLucky = inject("commentsLucky")
@@ -82,7 +82,7 @@ const handleFilter = () => {
     return;
   }
   const searchQuery = (defaultFilter.value.keyword ? `?search=${defaultFilter.value.keyword}` : '')
-    fetch("http://localhost:3000/meiliSearchFilter/64ddc7a085d30646fcfa21ed-live_1" + searchQuery, {
+    fetch("https://stm-server.gstech.space/meiliSearchFilter/" + idChanel.value + searchQuery, {
       method: "POST", 
       headers: {
         "Content-Type": "application/json",
@@ -185,11 +185,28 @@ function removeCommentLucky(){
     }
 }
 
+const createIndexSuccess = ref(false)
+
+const handleCreateMeilisearch = () => {
+  console.log(idChanel.value)
+ 
+  fetch("https://stm-server.gstech.space/createIndexesMeiliSearch/" + idChanel.value, {
+      method: "POST"
+  })
+  .then(res => res.json())
+  .then(res => {
+    if(res.success) {
+      createIndexSuccess.value = true
+    }
+  })
+}
+
 </script>
 <template>
 
   <div class="flex flex-column gap-1">
-    
+    <Button @click="handleCreateMeilisearch" class="max-w-10rem flex justify-content-center">Tạo meilisearch</Button>
+    <p v-show="createIndexSuccess">Create index meilisearch success</p>
     <div class="p-fluid">
       <div class="p-fluid">
         <div class="p-inputgroup flex-1 mb-2">
