@@ -6,7 +6,7 @@ import { useI18n } from "vue-i18n-lite";
 import InputSwitch from 'primevue/inputswitch';
 import Dropdown from 'primevue/dropdown';
 import Button from 'primevue/button';
-import InputText from 'primevue/inputtext';
+import InputText from 'primevue/InputText';
 import Chips from 'primevue/chips';
 import { useRoute } from 'vue-router';
 
@@ -82,7 +82,7 @@ const handleFilter = () => {
     return;
   }
   const searchQuery = (defaultFilter.value.keyword ? `?search=${defaultFilter.value.keyword}` : '')
-    fetch("http://localhost:3000/meiliSearchFilter/" + idChanel.value + searchQuery, {
+    fetch("https://stm-server.gstech.space/meiliSearchFilter/" + idChanel.value + searchQuery, {
       method: "POST", 
       headers: {
         "Content-Type": "application/json",
