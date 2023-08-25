@@ -6,7 +6,7 @@ import { useI18n } from "vue-i18n-lite";
 import InputSwitch from 'primevue/inputswitch';
 import Dropdown from 'primevue/dropdown';
 import Button from 'primevue/button';
-import InputText from 'primevue/InputText';
+import InputText from 'primevue/inputtext';
 import Chips from 'primevue/chips';
 import { useRoute } from 'vue-router';
 
